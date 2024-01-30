@@ -19,6 +19,14 @@ builder.Services.AddDbContext<DataContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+// CORS Policy
+builder.Services.AddCors(opt => {
+    opt.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+    });
+});
+
 // app 변수에 Web Application 빌드한 거 저장
 var app = builder.Build();
 
@@ -28,6 +36,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// 위 builder 서비스에 저장한 CorsPolicy
+app.UseCors("CorsPolicy");
 
 // 사용자 인증하기 위한 수단, 보안 담당
 app.UseAuthorization();
