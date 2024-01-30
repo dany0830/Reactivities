@@ -6,6 +6,7 @@ import { Header, List } from "semantic-ui-react";
 function App() {
   const [activities, setActivities] = useState([]);
 
+  // axios.get 을 사용하여 ActivitiesController.cs 에서 설정해놓은 GET 요청을 가져오고, 그 값을 useState 의 setActivities 를 통해 activities 에 저장함
   useEffect(() => {
     axios.get("http://localhost:5000/api/activities")
       .then(response => {
@@ -21,6 +22,7 @@ function App() {
       <Header as="h2" icon="users" content="Reactivities" />
 
       <List>
+        {/* useEffect 에서 저장해놓은 값들을 웹페이지에 display */}
         {activities.map((activity: any) => (
           <List.Item key={activity.id}>
             {activity.title}
