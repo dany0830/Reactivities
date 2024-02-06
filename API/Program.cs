@@ -1,3 +1,4 @@
+using API.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -9,23 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 // 컨트롤러 추가, MVC (Model-View-Controller) 서비스 사용 가능하게 함
 builder.Services.AddControllers();
 
-// API endpoints 문서화하기 위한 API Explorer 서비스 추가, Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// => is lambda expression, DataContext 클래스에서 만든 로직 (데이터베이스 연결 통신 관리 등) 을 서비스로 등록하는 과정
-builder.Services.AddDbContext<DataContext>(opt =>
-{
-    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-// CORS Policy
-builder.Services.AddCors(opt => {
-    opt.AddPolicy("CorsPolicy", policy =>
-    {
-        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
-    });
-});
+// ApplicationServiceExtensions 클래스에서 정의된 메소드. 이 메소드 안에 builder.Services 로 만들었던 기능들 모두 포함되어 있음 (Mediator, AutoMapper 사용하게 해주는 코드)
+builder.Services.AddApplicationServices(builder.Configuration);
 
 // app 변수에 Web Application 빌드한 거 저장
 var app = builder.Build();
